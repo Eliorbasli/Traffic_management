@@ -6,13 +6,13 @@ from pydantic import Field, EmailStr
 
 class User(Document):
     user_id: UUID = Field(default_factory=uuid4)
-    username: str = Indexed(str, unique=True)
+    username: Indexed(str, unique=True)
     # email: Indexed(EmailStr, unique=True)
-    email: str = Indexed(str, unique=True)
+    email: Indexed(str, unique=True)
     hashed_password:str
     first_name: Optional[str] = None
     last_name: Optional[str] = None
-    disabled: Optional[bool] = None
+    disabled: Optional[bool] = False
     
     def __repr__(self) -> str:
         return f"<User {self.email}>"
