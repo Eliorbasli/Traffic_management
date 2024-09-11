@@ -7,8 +7,8 @@ class UserService:
     @staticmethod
     async def creaate_user(user: UserAuth):
         user_in = User(
-            username =user.username,
-            email = user.email,
+            username=user.username,
+            email=user.email,
             hashed_password=get_password(user.password)    
         )
         await user_in.save()

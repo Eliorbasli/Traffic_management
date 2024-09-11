@@ -6,9 +6,8 @@ from pydantic import Field, EmailStr
 
 class User(Document):
     user_id: UUID = Field(default_factory=uuid4)
-    username: Indexed(str, unique=True)
-    # email: Indexed(EmailStr, unique=True)
-    email: Indexed(str, unique=True)
+    username:str = Indexed(unique=True)
+    email:str = Indexed(unique=True)
     hashed_password:str
     first_name: Optional[str] = None
     last_name: Optional[str] = None
