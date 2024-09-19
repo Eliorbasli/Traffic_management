@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from contextlib import asynccontextmanager
 
 from app.models.user_model import User
+from app.models.graph_model import Graph
 from app.api.api_v1.router import router
 
 
@@ -13,11 +14,11 @@ async def lifespan(app: FastAPI):
     """
         initialize crucial application services
     """
-    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING).trafficmanagement
+    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING)[settings.MONGO_DATABASE]
     await init_beanie(
         database=db_client,
         document_models= [
-            User
+            User, Graph
         ]
     )
     
