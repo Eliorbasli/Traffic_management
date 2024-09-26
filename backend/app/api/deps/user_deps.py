@@ -41,4 +41,4 @@ async def get_current_user(token: str = Depends(reuseable_uauth)) -> User:
                 details="Could not find user",
             )
         
-        return user
+    return user
