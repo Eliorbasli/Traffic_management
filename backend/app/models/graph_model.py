@@ -7,10 +7,9 @@ from pydantic import BaseModel, Field
 from .user_model import User
 class Graph(Document):
     graph_id: UUID = Field(default_factory=uuid4, unique=True)
-    username:str = Indexed(unique=False)
+    name:str
     nodes: List[str]
-    edges: tuple[str, List[List]]  # Adjust type as needed
-    # edges: List[Tuple[str,str]]  # Adjust type as needed
+    edges: List[List[str]]
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     owner : Link[User]
