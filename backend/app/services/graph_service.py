@@ -20,3 +20,9 @@ class GraphService:
         graph = Graph(**data.model_dump() , owner=user)
         
         return await graph.insert()
+    
+    @staticmethod
+    async def get_graph_by_name(name: str) -> List[Graph]:
+        graphs = await Graph.find({"name": name}).to_list()
+        
+        return graphs
