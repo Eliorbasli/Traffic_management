@@ -47,3 +47,16 @@ def test_login_user(clear_test_data):
     assert "access_token" in data
     assert "refresh_token" in data
 
+def test_invalied_login(clear_data):
+    # Attempt login with incorrect password
+    login_data = {
+        "username": mock_user["username"],
+        "password": mock_user["password"]
+    }
+    
+    response = client.post("/api/v1/auth/login", json=login_data)
+    
+    assert response.status_code == 401
+    
+    data = response.json()
+    assert data["detail"] == "Incorrect username or password"
