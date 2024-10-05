@@ -29,3 +29,21 @@ def test_create_user(clear_test_data):
     assert data["email"] == mock_user["email"]
     assert "user_id" in data
     
+    
+# Test User Login Endpoint
+def test_login_user(clear_test_data):
+    client.post("/api/v1/auth/create", json=mock_user)
+    
+    login_data = {
+        "username": mock_user["username"],
+        "password": mock_user["password"]
+    }
+    
+    response = client.post("/api/v1/auth/login", json=login_data)
+    
+    assert response.status_code == 200
+    
+    data = response.json()
+    assert "access_token" in data
+    assert "refresh_token" in data
+
