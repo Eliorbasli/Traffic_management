@@ -60,3 +60,55 @@ def test_invalied_login(clear_data):
     
     data = response.json()
     assert data["detail"] == "Incorrect username or password"
+    
+def test_duplicate_user_creation(clear_test_data):
+    client.post("/api/v1/auth/create" , json=mock_user)
+
+    response = client.post("/api/v1/auth/create", json=mock_user)
+    
+    assert response.status_code == 400
+    
+    data = response.json()
+    assert data["detail"] == "User with this username or email alreay exists"
+    
+    
+def test_missing_fields_user_creation(clear_data):
+    incomplete_user = {
+        "username": "newuser",
+        "email": "newuser@example.com"
+        # Missing "password"
+    }
+    
+    response = client.get("/api/v1/auth/create" , json=incomplete_user)
+    
+    assert response.status_code == 422
+    
+    data = response.json()
+    assert data["detail"][0]["msg"] == "field required"
+    
+    incomplete_user = {
+        "username": "newuser",
+        "password": "newpassword123"
+        # Missing "email"
+    }
+    
+    response = client.post("/api/v1/auth/create", json=incomplete_user)
+    
+    assert response.status_code == 422, f"Expected 422, got {response.status_code}"
+    
+    data = response.json()
+    assert data["detail"][0]["msg"] == "field required", "Error message for missing email field does not match"
+
+    incomplete_user = {
+        "email": "newuser@example.com",
+        "password": "newpassword123"
+        # Missing "username"
+    }
+    
+    response = client.post("/api/v1/auth/create", json=incomplete_user)
+    
+    assert response.status_code == 422, f"Expected 422, got {response.status_code}"
+    
+    data = response.json()
+    assert data["detail"][0]["msg"] == "field required", "Error message for missing username field does not match"
+
