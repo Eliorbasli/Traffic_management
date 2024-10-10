@@ -33,3 +33,48 @@ def test_create_graph(clear_test_data):
     assert data["name"] == mock_graph["name"]
     assert data["nodes"] == mock_graph["nodes"]
     assert data["edges"] == mock_graph["edges"]
+
+def test_get_graph_by_id(clear_test_data):
+    create_response = client.post("/api/v1/graph/create" , json=mock_graph)
+    graph_id = create_response.json()["graph_id"]
+    
+    get_response = client.post(f"/api/v1/graph/{graph_id}")
+    
+    assert get_response.status_code == 200
+    
+    data = get_response.json()
+    assert data["graph_id"] == graph_id
+    assert data["name"] == mock_graph["name"]
+    assert data["nodes"] == mock_graph["nodes"]
+    assert data["edges"] == mock_graph["edges"]
+    
+
+def test_create_graph_missing_fields(clear_test_data):
+    incomplete_graph = {
+        "name" : "Incomplete Graph",
+        "edges": {
+            "A" :[["B" , 1] , ["C" , 2]]
+        }
+    }
+    
+    response = client.post("/api/v1/graph/create", json=incomplete_graph)
+    
+    assert response.status_code == 422
+    
+    data = response.json()
+    assert data["detail"][0]["msg"] == "field required"
+    
+    # Missing name field
+    incomplete_graph = {
+        "nodes" : ["A" , "B"],
+        "edges": {
+            "A" :[["B" , 1] , ["C" , 2]]
+        }
+    }
+    
+    response = client.post("/api/v1/graph/create", json=incomplete_graph)
+    
+    assert response.status_code == 422
+    
+    data = response.json()
+    assert data["detail"][0]["msg"] == "field required"
