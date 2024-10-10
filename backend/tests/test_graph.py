@@ -78,3 +78,7 @@ def test_create_graph_missing_fields(clear_test_data):
     
     data = response.json()
     assert data["detail"][0]["msg"] == "field required"
+    
+    
+def test_duplication_graph_creation(clear_test_data):
+    pass
